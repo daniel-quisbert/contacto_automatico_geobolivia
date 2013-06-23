@@ -2,7 +2,7 @@
 /*
  *	Autor: Daniel Quisbert
  */
-include ("config.php");
+//include ("config.php");
 /** Devuelve la conexion al servidor LDAP**/
 function conectLdap($ldapconfig) {
 	$ldap_conn = ldap_connect($ldapconfig['host'], $ldapconfig['port']);
@@ -10,34 +10,48 @@ function conectLdap($ldapconfig) {
 	if ($ldap_conn)
 		return $ldap_conn;
 	else
-		return $ldapconfig;
+		return FALSE;
 }
 
 /**Devuelve TRUE si el usuario existe**/
-function verificaUser($ldapconfig, $user) {
-	$sw = 0;
+/*
+ * Retorna 1 si sólo el usuario ya Existe
+ * Retorna 2 si sólo el correo ya existe
+ * Retorna 3 si los dos ya existen
+ * retorna 0 si no existe ninguno
+ * */
+function verificaUser($ldapconfig, $infoUser) {
 	$con = conectLdap($ldapconfig);
-	$exist_user = FALSE;
+	$resp = 0;
 	if ($con) {
-		$search = ldap_search($con, trim($ldapconfig['ldap_dn']), trim($ldapconfig['filter'])) or exit("Unable to search LDAP server");
-		$entries = ldap_get_entries($ldap_conn, $search);
-		$memberuid = "uid=" . $user . "," . $ldapconfig['basedn'];
-		if ($entries) {
-			foreach ($entries[0]['memberuid'] as $member) {
-				if ($memberuid == $member) {
-					$exist_user = true;
-				}
-			}
+		$search1 = ldap_search($con, trim($ldapconfig['ldap_dn']), "(&(uid=" . $infoUser['usuario'] . "))") or exit("Unable to search LDAP server");
+		$search2 = ldap_search($con, trim($ldapconfig['ldap_dn']), "(&(mail=" . $infoUser['email'] . "))") or exit("Unable to search LDAP server");
+		$entries_user = ldap_count_entries($con, $search1);
+		$entries_mail = ldap_count_entries($con, $search2);
+
+		if ($entries_user == 1) {
+			if ($entries_mail == 1)
+				$resp = 3;
+			else
+				$resp = 1;
 		}
+		else {
+			if ($entries_mail == 1)
+				$resp = 2;			
+		}
+
 	} else {
 		echo "No se pueder conectar al servidor LDAP " . $ldapconfig['host'];
 	}
 	ldap_close($con);
-	return $exist_user;
+	return $resp;
 }
 
 function addUser($ldapconfig, $_POST) {
-
+	$con = conectLdap($ldapconfig);
+	if ($con) {
+		$auth = ldap_bind($con, "cn=admin,dc=geo,dc=gob,dc=bo", "root");
+	}
 }
 
 function formulaires_contacto_automatico_geobolivia_charger($adresse, $url = '', $sujet = '') {
