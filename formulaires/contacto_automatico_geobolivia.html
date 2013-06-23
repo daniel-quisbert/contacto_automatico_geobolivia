@@ -1,0 +1,340 @@
+<div class="formulaire_spip1 formulaire_spip formulaire_contacto_geobolivia ajax" id="formulaire_contacto_geobolivia#ENV{id}">
+<br class='bugajaxie' />
+[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+[(#ENV{editable})
+<form method='post' action='#ENV{action}#formulaire_contacto_geobolivia#ENV{id}' enctype='multipart/form-data'>
+	[(#REM) declarer les hidden qui declencheront le service du formulaire parametre : url d'action ]
+	#ACTION_FORMULAIRE{#ENV{action}}
+	[(#REM) Previsualisation... ]
+	[(#ENV*{erreurs}|table_valeur{previsu}|oui)
+	<div class="previsualizar">
+		<fieldset class="previsu">
+			<legend><:previsualisation:></legend>
+			<ul>
+				<!--li><strong>Usuario: </strong><em>#ENV{usuario_message}</em></li-->
+				<li><strong>Nombre Completo: </strong> <em>#ENV{nom_message}</em></li>
+				<li><strong>e-mail: </strong> <em>#ENV{email_message}</em></li>
+				[<li><strong>Tel&eacutefono: </strong> <em>(#ENV{telefono_message})</em></li>]
+				<li><strong>Nivel Acad&eacutemico: </strong> <em>#ENV{grado_message}</em></li>
+				<li><strong>Pa&iacutes: </strong> <em>#ENV{pais_message}</em></li>
+				<li><strong>Dep / Prov / Est: </strong> <em>#ENV{depprovest_message}</em></li>
+				<li><strong>Tipo Instituci&oacuten: </strong> <em>#ENV{institucion_message}</em></li>
+				<li><strong>Nombre Instituci&oacuten: </strong> <em>#ENV{nominstitucion_message}</em></li>
+				<li><strong>Mensaje: </strong></li>
+				<li><em>[(#ENV{texte_message}|nl2br)]</em></li>
+				
+				
+			</ul>
+			
+			<p class="boutons"><input type="submit" class="submit" name="confirmer" value="<:form_prop_confirmer_envoi:>" /></p>
+		</fieldset>
+	</div><!--- Fin previsualizar --->
+	]
+	[(#REM) Sinon, formulaire normal ]
+
+	<div class="datos">
+	<fieldset>
+		<legend><:envoyer_message:></legend>
+		<ul>
+			
+		[(#SAISIE{hidden, ipvisitaProxy_message, label="ip"})]
+		[(#SAISIE{hidden, ipvisita_message, label="ip_conproxy"})]
+						
+<!--- Usuario--->	
+			[(#SET{label,<:contacto_geobolivia:info_usuario_message:>})]
+			#SAISIE{input, usuario_message, label=#GET{label}, size=30, placeholder="Requerido"}
+0
+<!--   Nombre Completo   --->
+			[(#SET{label,<:contacto_geobolivia:info_nom_message:>})]
+			#SAISIE{input, nom_message, label=#GET{label}, size=30, placeholder="Requerido"}
+<!---   Fin nombre Completo   --->
+<!---	email	--->
+			[(#SET{label,<:entree_adresse_email_2:>})]
+			#SAISIE{input, email_message, label=#GET{label}, size=40, placeholder="Requerido"}
+<!---	Fin email	--->
+<!---	telefono opcional	--->
+            [(#SET{label,<:contacto_geobolivia:info_telefono_message:>})]
+            #SAISIE{input, telefono_message, label=#GET{label}, size=10}            
+<!---	Fin telefono	--->
+<!---	Nivel Académio		--->
+            [(#SET{label,<:contacto_geobolivia:info_grado_message:>})]
+            [(#SET{datas3, #ARRAY{
+                <:contacto_geobolivia:grado_default:>,<:contacto_geobolivia:grado_default:>,
+                <:contacto_geobolivia:grado_estudiante:>,<:contacto_geobolivia:grado_estudiante:>,
+                <:contacto_geobolivia:grado_tecnico:>,<:contacto_geobolivia:grado_tecnico:>,
+                <:contacto_geobolivia:grado_profesional:>,<:contacto_geobolivia:grado_profesional:>,
+                <:contacto_geobolivia:grado_investigador:>,<:contacto_geobolivia:grado_investigador:>,
+                <:contacto_geobolivia:grado_otro:>,<:contacto_geobolivia:grado_otro:>,
+            }})]
+            [(#SAISIE{selection, grado_message, datas=#GET{datas3}, label=#GET{label}, cacher_option_intro=oui})]
+<!---	Fin grado académico	 --->
+<!---	Pis 	---
+            [(#SET{label,<:contacto_geobolivia:info_pais_message:>})]
+            #SAISIE{input, pais_message, label=#GET{label}, size=10, placeholder="Requerido"}           
+	--->
+       		[(#SET{label,<:contacto_geobolivia:info_pais_message:>})]
+            [(#SET{dataspais, #ARRAY{
+		"- - - - - - - - - -","- - - - - - - - - -",
+		"Afghanistan","Afghanistan",
+		"Albania","Albania",
+		"Algeria","Algeria",
+		"Andorra","Andorra",
+		"Angola", "Angola",
+		"Antigua and Barbuda","Antigua and Barbuda",
+		"Argentina","Argentina",
+		"Armenia","Armenia",
+		"Australia","Australia",
+		"Austria","Austria",
+		"Azerbaijan","Azerbaijan",
+		"Bahamas","Bahamas",
+		"Bahrain","Bahrain",
+		"Bangladesh","Bangladesh",
+		"Barbados","Barbados",
+		"Belarus","Belarus",
+		"Belgium","Belgium",
+		"Belize","Belize",
+		"Benin","Benin",
+		"Bhutan","Bhutan",
+		"Bolivia","Bolivia",
+		"Botswana","Botswana",
+		"Brazil","Brazil",
+		"Brunei","Brunei",
+		"Bulgaria","Bulgaria",
+		"Burkina Faso","Burkina Faso",
+		"Burundi","Burundi",
+		"Cambodia","Cambodia",
+		"Cameroon","Cameroon",
+		"Canada","Canada",
+		"Cape Verde","Cape Verde",
+		"Chad","Chad",
+		"Chile","Chile",
+		"China","China",
+		"Colombi","Colombi",
+		"Comoros","Comoros",
+		"Congo","Congo",
+		"Costa Rica","Costa Rica",
+		"Cote d'Ivoire","Cote d'Ivoire",
+		"Croatia","Croatia",
+		"Cuba","Cuba",
+		"Cyprus",Cyprus",
+		"Czech Republic","Czech Republic",
+		"Denmark","Denmark",
+		"Djibouti","Djibouti",
+		"Dominica","Dominica",
+		"Dominican Republic","Dominican Republic",
+		"Ecuador","Ecuador",
+		"Egypt","Egypt",
+		"El Salvador","El Salvador",
+		"Equatorial Guinea","Equatorial Guinea",
+		"Eritrea","Eritrea",
+		"Estonia","Estonia",
+		"Ethiopia","Ethiopia",
+		"Fiji","Fiji",
+		"Finland","Finland",
+		"France","France",
+		"Gabon","Gabon",
+		"Gambia, The","Gambia, The",
+		"Georgia","Georgia",
+		"Germany","Germany",
+		"Ghana","Ghana",
+		"Greece","Greece",
+		"Grenada","Grenada",
+		"Guatemala","Guatemala",
+		"Guinea","Guinea",
+		"Guinea-Bissau","Guinea-Bissau",
+		"Guyana","Guyana",
+		"Haiti","Haiti",
+		"Honduras","Honduras",
+		"Hungary","Hungary",
+		"Iceland","Iceland",
+		"India","India",
+		"Indonesia","Indonesia",
+		"Iran","Iran",
+		"Iraq","Iraq",
+		"Ireland","Ireland",
+		"Israel","Israel",
+		"Italy","Italy",
+		"Jamaica","Jamaica",
+		"Japan","Japan",
+		"Jordan","Jordan",
+		"Kazakhstan","Kazakhstan",
+		"Kenya","Kenya",
+		"Kiribati","Kiribati",
+		"Korea, North","Korea, North",
+		"Korea, South","Korea, South",
+		"Kuwait","Kuwait",
+		"Kyrgyzstan","Kyrgyzstan",
+		"Laos","Laos",
+		"Latvia",Latvia",
+		"Lebanon","Lebanon",
+		"Lesotho","Lesotho",
+		"Liberia","Liberia",
+		"Libya","Libya",
+		"Liechtenstein","Liechtenstein",
+		"Lithuania","Lithuania",
+		"Luxembourg","Luxembourg",
+		"Macedonia","Macedonia",
+		"Madagascar","Madagascar",
+		"Malawi","Malawi",
+		"Malaysia","Malaysia",
+		"Maldives","Maldives",
+		"Mali","Mali",
+		"Malta","Malta",
+		"Marshall Islands","Marshall Islands",
+		"Mauritania","Mauritania",
+		"Mauritius","Mauritius",
+		"Mexico","Mexico",
+		"Micronesia","Micronesia",
+		"Moldova","Moldova",
+		"Monaco","Monaco",
+		"Mongolia","Mongolia",
+		"Morocco","Morocco",
+		"Mozambique","Mozambique",
+		"Myanmar","Myanmar",
+		"Namibia","Namibia",
+		"Nauru","Nauru",
+		"Nepal","Nepal",
+		"Netherlands","Netherlands",
+		"New Zealand","New Zealand",
+		"Nicaragua","Nicaragua",
+		"Niger","Niger",
+		"Nigeria","Nigeria",
+		"Norway","Norway",
+		"Oman","Oman",
+		"Pakistan","Pakistan",
+		"Palau","Palau",
+		"Panama","Panama",
+		"Papua New Guinea","Papua New Guinea",
+		"Paraguay","Paraguay",
+		"Peru","Peru",
+		"Philippines","Philippines",
+		"Poland","Poland",
+		"Portugal","Portugal",
+		"Qatar","Qatar",
+		"Romania","Romania",
+		"Russia","Russia",
+		"Rwanda","Rwanda",
+		"Saint Kitts and Nevis","Saint Kitts and Nevis",
+		"Saint Lucia","Saint Lucia",
+		"Saint Vincent","Saint Vincent",
+		"Samoa","Samoa",
+		"San Marino","San Marino",
+		"Sao Tome and Principe","Sao Tome and Principe",
+		"Saudi Arabia","Saudi Arabia",
+		"Senegal","Senegal",
+		"Serbia and Montenegro","Serbia and Montenegro",
+		"Seychelles","Seychelles",
+		"Sierra Leone","Sierra Leone",
+		"Singapore","Singapore",
+		"Slovakia","Slovakia",
+		"Slovenia","Slovenia",
+		"Solomon Islands","Solomon Islands",
+		"Somalia","Somalia",
+		"South Africa","South Africa",
+		"Spain","Spain",
+		"Sri Lanka","Sri Lanka",
+		"Sudan","Sudan",
+		"Suriname","Suriname",
+		"Swaziland","Swaziland",
+		"Sweden","Sweden",
+		"Switzerland","Switzerland",
+		"Syria","Syria",
+		"Taiwan","Taiwan",
+		"Tajikistan","Tajikistan",
+		"Tanzania","Tanzania",
+		"Thailand","Thailand",
+		"Togo","Togo",
+		"Tonga","Tonga",
+		"Trinidad and Tobago","Trinidad and Tobago",
+		"Tunisia","Tunisia",
+		"Turkey","Turkey",
+		"Turkmenistan","Turkmenistan",
+		"Tuvalu","Tuvalu",
+		"Uganda","Uganda",
+		"Ukraine","Ukraine",
+		"United Arab Emirates","United Arab Emirates",
+		"United Kingdom","United Kingdom",
+		"United States","United States",
+		"Uruguay","Uruguay",
+		"Uzbekistan","Uzbekistan",
+		"Vanuatu","Vanuatu",
+		"Vatican City","Vatican City",
+		"Venezuela","Venezuela",
+		"Vietnam","Vietnam",
+		"Yemen","Yemen",
+		"Zambia","Zambia",
+		"Zimbabwe","Zimbabwe",
+
+            }})]
+       [(#SAISIE{selection, pais_message, datas=#GET{dataspais}, label=#GET{label}, cacher_option_intro=oui})]
+<!---	Fin Pais	--->
+
+<!---- Dep/Prov/Est 	---->
+            [(#SET{label,<:contacto_geobolivia:info_depprovest_message:>})]
+            #SAISIE{input, depprovest_message, label=#GET{label}, size=10, placeholder="Requerido"}            
+<!---	Dep/Prov/Est	--->
+<!---	Tipo de Intitucion	--->
+       		[(#SET{label,<:contacto_geobolivia:info_tipoinstitucion_message:>})]
+            [(#SET{datas2, #ARRAY{
+                <:contacto_geobolivia:institucion_default:>,<:contacto_geobolivia:institucion_default:>,
+                <:contacto_geobolivia:institucion_publica:>,<:contacto_geobolivia:institucion_publica:>,
+                <:contacto_geobolivia:institucion_privada:>,<:contacto_geobolivia:institucion_privada:>,
+                <:contacto_geobolivia:institucion_universidad:>,<:contacto_geobolivia:institucion_universidad:>,
+                <:contacto_geobolivia:institucion_otro:>,<:contacto_geobolivia:institucion_otro:>,
+            }})]
+            [(#SAISIE{selection, institucion_message, datas=#GET{datas2}, label=#GET{label}, cacher_option_intro=oui})]
+<!---	Fin tipo de institucion		--->
+<!---	Nombre de la institucion	--->
+            [(#SET{label,<:contacto_geobolivia:info_nominstitucion_message:>})]
+            #SAISIE{input, nominstitucion_message, label=#GET{label}, size=50, placeholder="Requerido"}          
+<!---	Fin nombre de la institucion	--->
+<!---	Asunto		---
+			[(#SET{label,<:form_prop_sujet:>})]
+		<ul class="asunto">
+			[(#SET{datas, #ARRAY{
+				<:contacto_geobolivia:categoria_consulta:>,<:contacto_geobolivia:categoria_consulta:>,
+				<:contacto_geobolivia:categoria_solicitud:>,<:contacto_geobolivia:categoria_solicitud:>,
+				<:contacto_geobolivia:categoria_cuenta:>,<:contacto_geobolivia:categoria_cuenta:>,
+				<:contacto_geobolivia:categoria_sistema:>,<:contacto_geobolivia:categoria_sistema:>,
+				<:contacto_geobolivia:categoria_datos:>,<:contacto_geobolivia:categoria_datos:>,
+			}})]
+			[(#SAISIE{radio, sujet_message, datas=#GET{datas}, label=#GET{label}, cacher_option_intro=oui})]
+		</ul>
+<!---	Fin Asunto		--->
+<!---	Mensaje		--->
+			[(#SET{label,<:contacto_geobolivia:info_texte_message:>})]
+			#SAISIE{textarea, texte_message, label=#GET{label}, rows=5, cols=50}
+<!---	Fin Mensaje		--->
+	</ul>
+	</fieldset>
+
+	
+	[(#REM) Piege a robots spammeurs ]
+	<p style="display: none;">
+		<label for="nobot"><:antispam_champ_vide:></label>
+		<input type="text" class="text" name="nobot" id="nobot" value="#ENV{nobot}" size="10" />
+	</p>
+
+	<div class="politicas">
+
+	<label><b>Pol&iacuteticas de Uso</b></label>
+	<textarea class="text_politicas" readonly rows="8" >
+Usted podrá acceder a la totalidad de los servicios mencionados, siempre y cuando respete las siguientes condiciones de uso:
+ * Hacer uso responsable del material geográfico disponible
+ * Reconocer los créditos del autor o entidades técnico-científico del &aacutembito gubernamental, privado, cooperaci&oacuten, fundaci&oacuten, ONG's, etc., productoras del dato; en tal razón se recomienda recurrir al metadato de la información de su interés, que les permitirá obtener criterios fundamentales como: fuente de datos, escala, calidad, actualidad, metodología, y otros respecto del dato.
+ * Al escribir un trabajo o artículo de investigación, citar la referencia de cualquier material geográfico consultado bajo el formato especificado en la portada del catalogo.
+ * No enviar ningún contenido abusivo, obsceno, vulgar, difamatorio, indecente, amenazante, sexual o cualquier otro material que pueda violar cualquier ley de su país, el pa&iacutes donde   "GeBbolivia" está instalado o Leyes Internacionales. Hacer eso provocará que sea inmediata y permanentemente expulsado y, si lo creemos oportuno, con notificación a su Proveedor de Servicios de Internet. Las direcciones IP de todos los envíos son registradas como ayuda para reforzar estas condiciones. 
+ * Revisar permanentemente los términos de uso y acceso a la información de esta plataforma, ya que es posible que estos cambien en cualquier momento. Seguir registrado a "GeoBolivia" después de esos cambios significa que acuerda estar legalmente sometido a esos nuevos términos tal como fueron actualizados y/o reformados.
+ * Como usuario acuerda que cualquier información que haya ingresado será almacenada en una base de datos. Dado que esta información no será compartida con ninguna tercera parte sin su consentimiento, "GeoBolivia" no podrá considerarse responsable por cualquier intento de hacking que conlleve a que los datos sean comprometidos.
+
+Teniendo en cuenta todo esto, se recomienda hacer uso de la información y servicios en el marco de la ética y la responsabilidad, caso contrario por favor no se registre. 
+	</textarea>
+	</div><!--- Fin politicas--->
+			<!---	Boton Previsualizar--->
+				<p class="boutons"><input type="submit" class="submit" name="valide" value="<:contacto_geobolivia:form_prop_envoyer:>" /></p>
+			<!--- 	Fin Boton Previsualizar		--->
+	</div><!--- Fin datos --->
+</form>
+]
+</div>
