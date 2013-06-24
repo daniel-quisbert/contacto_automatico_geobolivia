@@ -20,7 +20,7 @@ function conectLdap($ldapconfig) {
  * Retorna 3 si los dos ya existen
  * retorna 0 si no existe ninguno
  * */
-function verificaUser($ldapconfig, $infoUser) {
+function verifica($ldapconfig, $infoUser) {
 	$con = conectLdap($ldapconfig);
 	$resp = 0;
 	if ($con) {
