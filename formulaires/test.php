@@ -14,7 +14,7 @@ include ("config.php");
 		<li><input type=submit value="Verifica User"></li>
 		<?php
 		if($_POST['usuario']){
-			$v=verificaUser($ldapconfig,$_POST);
+			$v=verifica($ldapconfig,$_POST);
 			if($v == 1)
 				echo $_POST['usuario']." ya existe";
 			else{
