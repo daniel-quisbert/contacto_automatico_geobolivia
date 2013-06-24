@@ -2,9 +2,9 @@
 /*
  *	Autor: Daniel Quisbert
  */
-//include ("config.php");
+
 /** Devuelve la conexion al servidor LDAP**/
-function conectLdap($ldapconfig) {
+function connectLdap($ldapconfig) {
 	$ldap_conn = ldap_connect($ldapconfig['host'], $ldapconfig['port']);
 	ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3);
 	if ($ldap_conn)
@@ -13,7 +13,7 @@ function conectLdap($ldapconfig) {
 		return FALSE;
 }
 
-/**Devuelve TRUE si el usuario existe**/
+/**Devuelve TRUE si el usuario/email existen **/
 /*
  * Retorna 1 si sólo el usuario ya Existe
  * Retorna 2 si sólo el correo ya existe
@@ -21,37 +21,50 @@ function conectLdap($ldapconfig) {
  * retorna 0 si no existe ninguno
  * */
 function verifica($ldapconfig, $infoUser) {
-	$con = conectLdap($ldapconfig);
+	$con = connectLdap($ldapconfig);
 	$resp = 0;
 	if ($con) {
-		$search1 = ldap_search($con, trim($ldapconfig['ldap_dn']), "(&(uid=" . $infoUser['usuario'] . "))") or exit("Unable to search LDAP server");
-		$search2 = ldap_search($con, trim($ldapconfig['ldap_dn']), "(&(mail=" . $infoUser['email'] . "))") or exit("Unable to search LDAP server");
-		$entries_user = ldap_count_entries($con, $search1);
-		$entries_mail = ldap_count_entries($con, $search2);
+		$searchUser = ldap_search($con, trim($ldapconfig['ldap_dn']), "(&(uid=" . trim($infoUser['usuario']) . "))") or exit("Unable to search LDAP server");
+		$searchEmail = ldap_search($con, trim($ldapconfig['ldap_dn']), "(&(mail=" . trim($infoUser['email']) . "))") or exit("Unable to search LDAP server");
+		$entries_user = ldap_count_entries($con, $searchuser);
+		$entries_mail = ldap_count_entries($con, $searchEmail);
 
 		if ($entries_user == 1) {
 			if ($entries_mail == 1)
-				$resp = 3;
+				$resp = 3;		//Usuario y mail existen
 			else
-				$resp = 1;
+				$resp = 1;		// sólo el usuario existe
+		} elseif ($entries_mail == 1) {
+			$resp = 2;			//Sólo el mail existe
 		}
-		else {
-			if ($entries_mail == 1)
-				$resp = 2;			
-		}
-
+		ldap_close($con);
 	} else {
-		echo "No se pueder conectar al servidor LDAP " . $ldapconfig['host'];
-	}
-	ldap_close($con);
+		echo "No se puede conectar al servidor LDAP: " . $ldapconfig['host'];
+	}	
 	return $resp;
 }
 
-function addUser($ldapconfig, $_POST) {
+function addUser($ldapconfig, $user, $pass, $email, $phone) {
 	$con = conectLdap($ldapconfig);
 	if ($con) {
 		$auth = ldap_bind($con, "cn=admin,dc=geo,dc=gob,dc=bo", "root");
+		// Preparar los datos
+		$info["cn"] = "John Jones";
+		$info["sn"] = "Jones";
+		$info["Email"] = "jonj@example.com";
+		$info["objectclass"] = "person";
+		$info["employeeType"] = "person";
+		$info["Telephone"] = "person";
+		$info["Password"] = "person";	
+
+		// Agregar datos al directorio
+		$r = ldap_add($ds, "cn=John Jones, o=My Company, c=US", $info);
+
+		ldap_close($ds);
 	}
+	else{
+		echo "no se pudo conectar al servidor LDAP";
+	}			
 }
 
 function formulaires_contacto_automatico_geobolivia_charger($adresse, $url = '', $sujet = '') {
@@ -68,7 +81,7 @@ function formulaires_contacto_automatico_geobolivia_charger($adresse, $url = '',
 	return $valeurs;
 }
 
-function formulaires_contacto_automatico_geobolivia_verifier_dist($adresse, $url = '', $sujet = '') {
+function formulaires_contacto_automatico_geobolivia_verifier($adresse, $url = '', $sujet = '') {
 	$erreurs = array();
 	include_spip('inc/filtres');
 	include_spip('inc/texte');
@@ -115,7 +128,7 @@ function formulaires_contacto_automatico_geobolivia_verifier_dist($adresse, $url
 	return $erreurs;
 }
 
-function formulaires_contacto_automatico_geobolivia_traiter_dist($adresse, $url = '', $sujet = '') {
+function formulaires_contacto_automatico_geobolivia_traiters($adresse, $url = '', $sujet = '') {
 	$adres = _request('email_message');
 	$nom = _request('nom_message');
 	// nuevos atributos para el registro de usuarios
